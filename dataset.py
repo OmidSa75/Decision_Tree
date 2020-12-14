@@ -24,9 +24,9 @@ class Dataset(object):
         return '{}'.format(self.data)
 
     def __call__(self, percent: float = 1.0):
+        self.x = self.data[:, 1:]
+        self.y = self.data[:, 0]
         data_population = int(self.__len__() * percent)
         choices = np.random.choice(self.__len__(), data_population, replace=False)
         self.x = self.x[choices]
         self.y = self.y[choices]
-
-        return self.data[choices]

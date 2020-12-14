@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 
 def entropy_func(_class, n):  # Entropy for one class
@@ -11,7 +12,7 @@ def entropy_cal(_class1, _class2):  # Entropy for two class
     return entropy_func(_class1, _class1 + _class2) + entropy_func(_class2, _class1 + _class2)
 
 
-def entropy_of_one_division(division: list):  # Entropy for multiple class
+def entropy_of_one_division(division: np.ndarray):  # Entropy for multiple class
     s = 0
     n = len(division)
     classes = set(division)

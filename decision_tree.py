@@ -9,7 +9,7 @@ class DecisionTreeClassifier(object):
         self.columns_name = columns_names
 
     def find_best_split(self, col, y):
-        min_entropy = 100
+        min_entropy = float('inf')
         n = len(y)
         for value in set(col):
             y_predict = col < value
@@ -21,7 +21,7 @@ class DecisionTreeClassifier(object):
 
     def find_best_split_of_all(self, x, y):
         col = None
-        min_entropy = 100
+        min_entropy = float('inf')
         cutoff = None
 
         for i, c in enumerate(x.T):
@@ -36,11 +36,9 @@ class DecisionTreeClassifier(object):
 
     def fit(self, x, y, par_node={}, depth=0):
         if par_node is None:
-            par_node = {}
-        if par_node is None:
             return None
         elif len(y) == 0:
-            return 0
+            return None
         elif self.all_same(y):
             return {'val': y[0]}
         elif depth >= self.max_depth:
@@ -59,3 +57,22 @@ class DecisionTreeClassifier(object):
 
     def all_same(self, items):
         return all(x == items[0] for x in items)
+
+    def predict(self, x: np.ndarray):
+        results = np.array([0]*len(x))
+        for i, c in enumerate(x):
+            results[i] = self._get_prediction(c)
+        return results
+
+    def _get_prediction(self, row):
+        cur_layer = self.trees
+        while cur_layer:
+            if cur_layer.get('cutoff'):
+                if row[cur_layer['index_col']] < cur_layer['cutoff']:
+                    cur_layer = cur_layer['left']
+                else:
+                    cur_layer = cur_layer['right']
+            else:
+                return cur_layer.get('val')
+        else:
+            return -1
