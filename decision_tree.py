@@ -10,7 +10,6 @@ class DecisionTreeClassifier(object):
 
     def find_best_split(self, col, y):
         min_entropy = float('inf')
-        n = len(y)
         for value in set(col):
             y_predict = col < value
             my_entropy = get_entropy(y_predict, y)
